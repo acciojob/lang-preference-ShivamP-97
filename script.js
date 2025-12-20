@@ -1,40 +1,27 @@
-const messageEl = document.getElementById("message");
+document.addEventListener("DOMContentLoaded", function () {
+    const languageSelector = document.getElementById("languageSelector");
+    const selectedLanguageText = document.querySelector("#selectedLanguage span");
 
-const messages = {
-  en: "This is an example of language preference.",
-  es: "Este es un ejemplo de preferencia de idioma.",
-  fr: "Ceci est un exemple de préférence de langue."
-};
+    function updateLanguageText(language) {
+        const languageNames = {
+            en: "English",
+            es: "Spanish",
+            fr: "French",
+            de: "German"
+        };
+        selectedLanguageText.textContent = languageNames[language] || "English";
+    }
 
-let saved = sessionStorage.language;
+    const savedLanguage = sessionStorage.getItem("preferredLanguage");
+    if (savedLanguage) {
+        languageSelector.value = savedLanguage;
+        updateLanguageText(savedLanguage);
+    } else {
+        updateLanguageText(languageSelector.value);
+    }
 
-if (saved && messages[saved]) {
-  messageEl.textContent = messages[saved];
-} else {
-  sessionStorage.language = "en";
-  messageEl.textContent = messages.en;
-}
-
-function ensureIndexHtml() {
-  if (!location.pathname.endsWith("index.html")) {
-    location.href = "index.html";
-  }
-}
-
-document.getElementById("en").addEventListener("click", () => {
-  sessionStorage.language = "en";
-  messageEl.textContent = messages.en;
-  ensureIndexHtml();
-});
-
-document.getElementById("es").addEventListener("click", () => {
-  sessionStorage.language = "es";
-  messageEl.textContent = messages.es;
-  ensureIndexHtml();
-});
-
-document.getElementById("fr").addEventListener("click", () => {
-  sessionStorage.language = "fr";
-  messageEl.textContent = messages.fr;
-  ensureIndexHtml();
+    languageSelector.addEventListener("change", function () {
+        sessionStorage.setItem("preferredLanguage", languageSelector.value);
+        updateLanguageText(languageSelector.value);
+    });
 });
